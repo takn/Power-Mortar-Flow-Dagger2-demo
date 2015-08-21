@@ -38,8 +38,10 @@ public class BasicMortarContextFactory implements PathContextFactory {
 
         static void destroyScope(Context context) {
             MortarScope scope = MortarScope.getScope(context);
-            Log.d(BasicMortarContextFactory.class.getCanonicalName(), "MortarContextFactory - Destroy scope " + scope.getName());
-            scope.destroy();
+            if (scope != null) {
+                Log.d(BasicMortarContextFactory.class.getCanonicalName(), "MortarContextFactory - Destroy scope " + scope.getName());
+                scope.destroy();
+            }
         }
 
         public TearDownContext(Context context, MortarScope scope) {

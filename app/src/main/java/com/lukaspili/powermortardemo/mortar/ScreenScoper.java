@@ -3,6 +3,7 @@ package com.lukaspili.powermortardemo.mortar;
 import android.content.Context;
 
 import com.lukaspili.powermortardemo.app.DaggerService;
+import com.lukaspili.powermortardemo.ui.activity.RootActivity;
 
 import automortar.ScreenComponentFactory;
 import flow.path.Path;
@@ -15,6 +16,11 @@ public class ScreenScoper {
 
     public MortarScope getScreenScope(Context context, String name, Path path) {
         MortarScope parentScope = MortarScope.getScope(context);
+
+        if (parentScope == null) {
+            parentScope = RootActivity.buildScope(context.getApplicationContext(),
+                    RootActivity.class.getName());
+        }
 
         MortarScope childScope = parentScope.findChild(name);
         if (childScope != null) {

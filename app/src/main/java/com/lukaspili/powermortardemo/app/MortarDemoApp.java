@@ -18,6 +18,7 @@ import timber.log.Timber;
 public class MortarDemoApp extends Application {
 
     private MortarScope mortarScope;
+    private static MortarDemoApp app;
 
     @Override
     public Object getSystemService(String name) {
@@ -27,7 +28,7 @@ public class MortarDemoApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        app = this;
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
@@ -38,5 +39,11 @@ public class MortarDemoApp extends Application {
         mortarScope = MortarScope.buildRootScope()
                 .withService(DaggerService.SERVICE_NAME, component)
                 .build("Root");
+    }
+
+    public static MortarDemoAppComponent getAppComponent(){
+        MortarDemoAppComponent component = DaggerMortarDemoAppComponent.create();
+        component.inject(app);
+        return component;
     }
 }

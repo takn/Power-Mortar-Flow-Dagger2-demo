@@ -2,29 +2,38 @@ package com.lukaspili.powermortardemo.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.lukaspili.powermortardemo.R;
 import com.lukaspili.powermortardemo.app.DaggerService;
 import com.lukaspili.powermortardemo.app.presenter.LoginPresenter;
 import com.lukaspili.powermortardemo.app.presenter.screen.LoginScreen;
 import com.lukaspili.powermortardemo.app.presenter.screen.LoginScreenComponent;
+import com.lukaspili.powermortardemo.app.presenter.screen.ViewPostScreen;
+import com.lukaspili.powermortardemo.model.Post;
 import com.lukaspili.powermortardemo.mortar.ScreenScoper;
 
 import javax.inject.Inject;
 
 import autodagger.AutoInjector;
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import butterknife.OnClick;
+import flow.Flow;
 import mortar.MortarScope;
 
 /**
  * @author Lukasz Piliszczuk <lukasz.pili@gmail.com>
  */
 @AutoInjector(LoginPresenter.class)
-public class LoginView extends FrameLayout {
+public class LoginView extends LinearLayout {
 
     @Inject
     protected LoginPresenter presenter;
+
+    @InjectView(R.id.hello)
+    protected TextView hello;
 
     public LoginView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -71,11 +80,22 @@ public class LoginView extends FrameLayout {
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         ButterKnife.inject(this);
     }
 
     @OnClick
     void click() {
         presenter.click();
+    }
+
+    @OnClick(R.id.hello)
+    void helloClick() {
+        Post post = new Post();
+        post.setId(1);
+        post.setUserId(10);
+        post.setBody("my body");
+        post.setTitle("title");
+        Flow.get(getContext()).set(new ViewPostScreen(post));
     }
 }

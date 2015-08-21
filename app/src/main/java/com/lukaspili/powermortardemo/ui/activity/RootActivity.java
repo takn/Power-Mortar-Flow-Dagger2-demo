@@ -2,6 +2,7 @@ package com.lukaspili.powermortardemo.ui.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -70,14 +71,7 @@ public class RootActivity extends Activity implements Flow.Dispatcher {
         mortarScope = MortarScope.findChild(getApplicationContext(), getClass().getName());
 
         if (mortarScope == null) {
-            RootActivityComponent component = DaggerRootActivityComponent.builder()
-                    .mortarDemoAppComponent(DaggerService.<MortarDemoAppComponent>getDaggerComponent(getApplicationContext()))
-                    .build();
-
-            mortarScope = MortarScope.buildChild(getApplicationContext())
-                    .withService(BundleServiceRunner.SERVICE_NAME, new BundleServiceRunner())
-                    .withService(DaggerService.SERVICE_NAME, component)
-                    .build(getClass().getName());
+            mortarScope = buildScope(getApplicationContext(), getClass().getName());
         }
 
         DaggerService.<RootActivityComponent>getDaggerComponent(this).inject(this);
@@ -91,6 +85,17 @@ public class RootActivity extends Activity implements Flow.Dispatcher {
         @SuppressWarnings("deprecation") FlowDelegate.NonConfigurationInstance nonConfig =
                 (FlowDelegate.NonConfigurationInstance) getLastNonConfigurationInstance();
         flowDelegate = FlowDelegate.onCreate(nonConfig, getIntent(), savedInstanceState, parceler, History.single(new PostsScreen()), this);
+    }
+
+    public static MortarScope buildScope(Context applicationContext, String name) {
+        RootActivityComponent component = DaggerRootActivityComponent.builder()
+                .mortarDemoAppComponent(DaggerService.<MortarDemoAppComponent>getDaggerComponent(applicationContext))
+                .build();
+
+        return MortarScope.buildChild(applicationContext)
+                .withService(BundleServiceRunner.SERVICE_NAME, new BundleServiceRunner())
+                .withService(DaggerService.SERVICE_NAME, component)
+                .build(name);
     }
 
     @Override

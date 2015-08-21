@@ -32,6 +32,7 @@ public class PostsView extends LinearLayout {
     @InjectView(R.id.progress)
     public ProgressBar progressBar;
 
+
     public PostsView(Context context, AttributeSet attrs) {
         super(context, attrs);
         DaggerService.<PostsScreenComponent>getDaggerComponent(context).inject(this);
