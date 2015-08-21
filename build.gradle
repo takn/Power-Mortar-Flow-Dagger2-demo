@@ -16,4 +16,7 @@ allprojects {
     repositories {
         jcenter()
     }
+    configurations.all {
+        resolutionStrategy.force 'com.android.support:support-annotations:22.2.0'
+    }
 }
